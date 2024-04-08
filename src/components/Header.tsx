@@ -2,7 +2,7 @@ import React from 'react';
 import StyledHeader from "../styles/Header.tsx";
 import {Link} from "react-router-dom";
 import Button from "./Button.tsx";
-import logo from "../assets/logo.png";
+import logo from "/logo.png";
 import useUser from "../hooks/useUser.tsx";
 
 const Header = () => {

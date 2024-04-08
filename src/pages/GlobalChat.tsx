@@ -1,14 +1,12 @@
 import {useRoom} from "../hooks/useRoom.tsx";
-import {useEffect, useRef, useState, KeyboardEvent} from "react";
+import {useRef, useState, KeyboardEvent} from "react";
 import {ChatMessageType, MessageType} from "../types/chat.ts";
 import styled from "styled-components";
-import send from "../assets/send.svg"
+import send from "/send.svg"
 import MessagesBox from "../components/MessagesBox.tsx";
-import Message from "../components/Message.tsx";
 import useUser from "../hooks/useUser.tsx";
 import hashCode from "../utils/hash.ts";
-import message from "../components/Message.tsx";
-import {log} from "node:util";
+
 
 const roomId = 'kfwlakflwekflmvlfkleflaepqe'
 const config = {appId: 'my_best_app'}
