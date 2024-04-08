@@ -4,10 +4,12 @@ import styled from "styled-components";
 import {ChatMessageType} from "../types/chat.ts";
 
 const StyledDivMessages = styled.div`
-    padding: 4px;
+    padding: 8px;
     margin-top: 1rem;
-    border: black solid 1px;
-    border-radius: 7px;
+    -webkit-box-shadow: 0 5px 10px 2px rgba(34, 60, 80, 0.2) inset;
+    -moz-box-shadow: 0 5px 10px 2px rgba(34, 60, 80, 0.2) inset;
+    box-shadow: 0 5px 10px 2px rgba(34, 60, 80, 0.2) inset;
+    border-radius: 5px;
     height: 74vh;
     overflow-x: hidden;
     position: relative;

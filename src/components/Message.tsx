@@ -18,6 +18,9 @@ const StyledMessage = styled.div`
     max-width: 80%;
     min-width: 30%;
     word-wrap: break-word;
+    -webkit-box-shadow: 0 5px 10px 2px rgba(34, 60, 80, 0.2) inset;
+    -moz-box-shadow: 0 5px 10px 2px rgba(34, 60, 80, 0.2) inset;
+    box-shadow: 0 5px 10px 2px rgba(34, 60, 80, 0.2) inset;
 
     span {
         color: rgba(104, 108, 114, 0.75);
@@ -31,25 +34,17 @@ const StyledMessage = styled.div`
 
 const StyledDivLeft = styled.div`
     text-align: left;
-
+    
     ${StyledMessage} {
         background-color: rgba(170, 169, 169, 0.5);
-    }
-
-    p {
-        background-color: #ffffff;
         border-bottom-left-radius: 0;
     }
 `
 const StyledDivRight = styled.div`
     text-align: right;
-
+    
     ${StyledMessage} {
         background-color: rgba(169, 225, 225, 0.5);
-    }
-
-    p {
-        background-color: #EEFFDE;
         border-bottom-right-radius: 0;
     }
 `
