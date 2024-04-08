@@ -201,7 +201,7 @@ Error generating stack: `+o.message+`
     position: absolute;
     bottom: 1%;
     right: 3%;
-`,Rw=()=>B.jsxs(Cw,{children:[B.jsx("h1",{children:"Council of 3 men, cheese and fucked came up with the idea for this site"}),B.jsx(xw,{children:"Firefly is the best btw"})]}),Pw=S0(Ms(B.jsxs(hi,{element:B.jsx($1,{}),children:[B.jsx(hi,{index:!0,element:B.jsx(U1,{})}),B.jsx(hi,{path:"/global_chat",element:B.jsx(kw,{})}),B.jsx(hi,{path:"/about",element:B.jsx(Rw,{})})]})));function Tw(){const[e,t]=T.useState(()=>{const n=sessionStorage.getItem("user");return n?JSON.parse(n):null});return B.jsx(mm.Provider,{value:{user:e,setUser:t},children:B.jsx(N0,{router:Pw})})}const Nw=M1`
+`,Rw=()=>B.jsxs(Cw,{children:[B.jsx("h1",{children:"Council of 3 men, cheese and fucked came up with the idea for this site"}),B.jsx(xw,{children:"Firefly is the best btw"})]}),Pw=S0(Ms(B.jsxs(hi,{element:B.jsx($1,{}),children:[B.jsx(hi,{index:!0,element:B.jsx(U1,{})}),B.jsx(hi,{path:"/global_chat",element:B.jsx(kw,{})}),B.jsx(hi,{path:"/about",element:B.jsx(Rw,{})})]})),{basename:"/testTrysteroChat/"});function Tw(){const[e,t]=T.useState(()=>{const n=sessionStorage.getItem("user");return n?JSON.parse(n):null});return B.jsx(mm.Provider,{value:{user:e,setUser:t},children:B.jsx(N0,{router:Pw})})}const Nw=M1`
     * {
         font-family: Nunito, sans-serif;
         margin: 0;
