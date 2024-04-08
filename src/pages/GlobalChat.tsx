@@ -8,6 +8,7 @@ import Message from "../components/Message.tsx";
 import useUser from "../hooks/useUser.tsx";
 import hashCode from "../utils/hash.ts";
 import message from "../components/Message.tsx";
+import {log} from "node:util";
 
 const roomId = 'kfwlakflwekflmvlfkleflaepqe'
 const config = {appId: 'my_best_app'}
@@ -72,11 +73,44 @@ const Main = () => {
     setMessages([...messages, {message: message as MessageType, me: false}])
   })
 
+  getMessageRequest((data, peer) => {
+    const messages_without_me: MessageType[] = messages.map((v) => v.message)
+    sendPeersMessages(messages_without_me)
+  })
+
+  function getUniqueMessages(messages: MessageType[]): MessageType[] {
+    const uniqueHashes: number[] = [];
+    return messages.filter(element => {
+      const isDuplicate = uniqueHashes.includes(element.hash);
+
+      if (!isDuplicate) {
+        uniqueHashes.push(element.hash);
+
+        return true;
+      }
+
+      return false;
+    })
+  }
+
   function onClickSyncMessages() {
     getPeersMessages((peers_messages, peer) => {
-      const new_messages = [...(peers_messages as MessageType[]), ...messages]
-
+      setMessages((messages) => {
+        const messages_without_me: MessageType[] = messages.map((v) => v.message)
+        const new_messages: MessageType[] = [...(peers_messages as MessageType[]), ...messages_without_me]
+        const new_unique_messages = getUniqueMessages(new_messages)
+        const completed_messages: ChatMessageType[] = new_unique_messages.map((v) => {
+          return {message: v, me: v.sender === username}
+        })
+        return completed_messages
+      })
     })
+
+    setTimeout(() => {
+      getPeersMessages((peers_messages, peer) => {
+      })
+    }, 5000)
+
     sendMessageRequest('')
   }
 

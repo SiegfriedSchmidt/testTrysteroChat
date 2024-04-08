@@ -28,6 +28,8 @@ const StyledMessage = styled.div`
 const StyledTimeSpan = styled.span`
     color: rgba(104, 108, 114, 0.75);
     padding: 4px;
+    padding-right: 6px;
+    padding-top: 6px;
     font-size: 9pt;
     position: absolute;
     bottom: 0;
@@ -59,11 +61,11 @@ const StyledDivRight = styled.div`
     }
 `
 
-const DateOptions: Intl.DateTimeFormatOptions = {hour: '2-digit', minute: '2-digit', hour12: false};
+// const DateOptions: Intl.DateTimeFormatOptions = {hour: '2-digit', minute: '2-digit', hour12: false};
 const Message: FC<MessageProps> = ({message, me}) => {
   const DivStyle = me ? StyledDivRight : StyledDivLeft
 
-  const date = (new Date(message.time)).toLocaleTimeString('en-US', DateOptions)
+  const date = (new Date(message.time)).toLocaleTimeString()
   return (
     <DivStyle>
       <StyledMessage>

@@ -1,4 +1,4 @@
-import {joinRoom} from "trystero/nostr";
+import {joinRoom} from "trystero/torrent";
 import {useEffect, useRef} from 'react'
 import {BaseRoomConfig, Room, selfId} from "trystero";
 
