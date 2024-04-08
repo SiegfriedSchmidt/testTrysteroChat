@@ -12,5 +12,6 @@ export default defineConfig({
             key: fs.readFileSync('./certs/tls.key')
         },
     },
+    base: process.env.NODE_ENV === 'production' ? '/testTrysteroChat/' : '/',
     plugins: [react()],
 })

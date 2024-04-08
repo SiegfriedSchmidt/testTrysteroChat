@@ -18,7 +18,7 @@ const router = createBrowserRouter(createRoutesFromElements(
     <Route path="/global_chat" element={<GlobalChat/>}/>
     <Route path="/about" element={<About/>}/>
   </Route>
-))
+), {basename: import.meta.env.BASE_URL})
 
 function App() {
   const [user, setUser] = useState<User | null>(() => {
