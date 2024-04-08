@@ -1,16 +1,19 @@
 import {useRoom} from "../hooks/useRoom.tsx";
 import {useEffect, useRef, useState, KeyboardEvent} from "react";
-import Message from "../components/Message.tsx";
-import {MessageType} from "../types/chat.ts";
+import {ChatMessageType, MessageType} from "../types/chat.ts";
 import styled from "styled-components";
 import send from "../assets/send.svg"
+import MessagesBox from "../components/MessagesBox.tsx";
+import Message from "../components/Message.tsx";
 
-const roomId = '43513413616461346431'
+const roomId = 'kfwlakflwekflmvlfkleflaepqe'
 const config = {appId: 'my_best_app'}
 
-
 const StyledDiv = styled.div`
+    margin: 0 auto;
+    max-width: 700px;
     padding: 1rem;
+    background-color: whitesmoke;
 
     h1 {
         font-size: 15pt;
@@ -38,18 +41,10 @@ const StyledDivSend = styled.div`
     align-items: center;
 `
 
-const StyledDivMessages = styled.div`
-    margin-top: 1rem;
-    border: black solid 1px;
-    border-radius: 7px;
-    height: 74vh;
-    overflow-x: hidden;
-`
-
 const Main = () => {
   const [room, selfId] = useRoom(config, roomId)
   const textareaRef = useRef<HTMLTextAreaElement>(null)
-  const [messages, setMessages] = useState<{ message: MessageType, me: boolean }[]>([])
+  const [messages, setMessages] = useState<ChatMessageType[]>([])
   const [peerCount, setPeerCount] = useState<number>(1)
 
   const [sendMessage, getMessage] = room.makeAction('message')
@@ -66,6 +61,10 @@ const Main = () => {
     setMessages([...messages, {message: message as MessageType, me: false}])
   })
 
+  function CreateMessage(sender: string, text: string): MessageType {
+    return {sender, text, time: (new Date()).getTime()}
+  }
+
   function keyDownHandler(e: KeyboardEvent<HTMLTextAreaElement>) {
     if (e.key === 'Enter') {
       e.preventDefault()
@@ -75,7 +74,7 @@ const Main = () => {
 
   function onClick() {
     if (textareaRef.current?.value) {
-      const message: MessageType = {username: 'Unknown', text: textareaRef.current.value}
+      const message: MessageType = CreateMessage("Unknown", textareaRef.current.value)
       setMessages([...messages, {message, me: true}])
       sendMessage(message)
       textareaRef.current.value = ''
@@ -83,18 +82,17 @@ const Main = () => {
   }
 
   return (
-    <StyledDiv>
+    <div style={{textAlign: "center"}}>
+      <StyledDiv>
       <h1>Online: {peerCount}</h1>
-      <StyledDivMessages>
-        {messages.map((message, idx) =>
-          <Message key={idx} message={message.message} me={message.me}/>
-        )}
-      </StyledDivMessages>
+      <MessagesBox messages={messages}/>
       <StyledDivSend>
-        <StyledTextarea rows={2} cols={30} ref={textareaRef} style={{}}/>
+        <StyledTextarea onKeyDown={keyDownHandler} rows={2} cols={30} ref={textareaRef} style={{}}/>
         <StyledButton onClick={onClick}><img src={send} alt="send"/></StyledButton>
       </StyledDivSend>
     </StyledDiv>
+    </div>
+
   );
 };
 
