@@ -56,10 +56,13 @@ const Main = () => {
   const textareaRef = useRef<HTMLTextAreaElement>(null)
   const [messages, setMessages] = useState<ChatMessageType[]>([])
   const [peerCount, setPeerCount] = useState<number>(1)
+  const [allPeers, setAllPeers] = useState<string[]>([])
 
   const [sendMessage, getMessage] = room.makeAction('message')
   const [sendPeersMessages, getPeersMessages] = room.makeAction('peermessage')
   const [sendMessageRequest, getMessageRequest] = room.makeAction('messagereq')
+  const [sendUsernameRequest, getUsernameRequest] = room.makeAction('activereq')
+  const [sendUsername, getUsername] = room.makeAction('username')
 
   room.onPeerJoin((peerId: string) => {
     setPeerCount(peerCount + 1)
@@ -76,6 +79,10 @@ const Main = () => {
   getMessageRequest((data, peer) => {
     const messages_without_me: MessageType[] = messages.map((v) => v.message)
     sendPeersMessages(messages_without_me)
+  })
+
+  getUsernameRequest((data, peer) => {
+    sendUsername(username)
   })
 
   function getUniqueMessages(messages: MessageType[]): MessageType[] {
@@ -117,6 +124,27 @@ const Main = () => {
     sendMessageRequest('')
   }
 
+  function onClickGetUsernames() {
+    setAllPeers([])
+    setPeerCount(0)
+    getUsername((username, peer) => {
+      setAllPeers((peers) => {
+        const uniquePeers = [...peers, username as string].filter((value, index, array) => {
+          return array.indexOf(value) === index;
+        })
+        setPeerCount(uniquePeers.length + 1)
+        return uniquePeers
+      })
+    })
+
+    setTimeout(() => {
+      getUsername((username, peer) => {
+      })
+    }, 5000)
+
+    sendUsernameRequest('')
+  }
+
   function CreateMessage(sender: string, text: string): MessageType {
     const newMessage = {sender, text, time: (new Date()).getTime()}
     return {...newMessage, hash: hashCode(JSON.stringify(newMessage))}
@@ -144,6 +172,7 @@ const Main = () => {
         <StyledDivSyncMessages>
           <h1>Online: {peerCount}</h1>
           <button onClick={onClickSyncMessages} style={{padding: '5px'}}>Sync messages</button>
+          <button onClick={onClickGetUsernames} style={{padding: '5px'}}>Sync peers</button>
         </StyledDivSyncMessages>
         <MessagesBox messages={messages}/>
         <StyledDivSend>
