@@ -1,10 +1,15 @@
 import React from 'react';
+import styled from "styled-components";
+
+const StyledDiv = styled.div` 
+  padding: 1rem;
+`
 
 const Home = () => {
   return (
-    <div>
+    <StyledDiv>
       <h1>Just home page, nothing interesting here...</h1>
-    </div>
+    </StyledDiv>
   );
 };
 

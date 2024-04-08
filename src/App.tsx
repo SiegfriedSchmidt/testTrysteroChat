@@ -8,11 +8,13 @@ import {
 import RootLayout from "./layouts/RootLayout.tsx";
 import Home from "./pages/Home.tsx";
 import GlobalChat from "./pages/GlobalChat.tsx";
+import About from "./pages/About.tsx";
 
 const router = createBrowserRouter(createRoutesFromElements(
   <Route element={<RootLayout/>}>
     <Route index element={<Home/>}/>
     <Route path="/global_chat" element={<GlobalChat/>}/>
+    <Route path="/about" element={<About/>}/>
   </Route>
 ))
 

@@ -3,7 +3,7 @@ import styled from "styled-components";
 const StyledHeader = styled.header`
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
+    justify-content: space-around;
     align-items: center;
     flex-wrap: wrap;
 
@@ -11,7 +11,18 @@ const StyledHeader = styled.header`
     border-radius: 0;
     background-color: rgba(58, 183, 246, 0.5);
 
-    & nav {
+    a {
+        text-decoration: none;
+        color: black;
+    }
+
+    p {
+        line-height: 30pt;
+        text-align: center;
+        vertical-align: middle;
+    }
+
+    nav {
         display: flex;
         gap: 0.75rem;
     }
