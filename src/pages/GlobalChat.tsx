@@ -102,6 +102,9 @@ const Main = () => {
         const completed_messages: ChatMessageType[] = new_unique_messages.map((v) => {
           return {message: v, me: v.sender === username}
         })
+        completed_messages.sort((lhs, rhs) => {
+          return lhs.message.time < rhs.message.time ? -1 : 1
+        })
         return completed_messages
       })
     })
