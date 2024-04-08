@@ -9,6 +9,8 @@ import RootLayout from "./layouts/RootLayout.tsx";
 import Home from "./pages/Home.tsx";
 import GlobalChat from "./pages/GlobalChat.tsx";
 import About from "./pages/About.tsx";
+import {UserContext} from "./context/UserContext.tsx";
+import {User} from "./types/user.ts";
 
 const router = createBrowserRouter(createRoutesFromElements(
   <Route element={<RootLayout/>}>
@@ -19,9 +21,15 @@ const router = createBrowserRouter(createRoutesFromElements(
 ))
 
 function App() {
+  const [user, setUser] = useState<User | null>(() => {
+    const storedUser = sessionStorage.getItem("user");
+    return storedUser ? JSON.parse(storedUser) : null;
+  })
 
   return (
-    <RouterProvider router={router}/>
+    <UserContext.Provider value={{user, setUser}}>
+      <RouterProvider router={router}/>
+    </UserContext.Provider>
   )
 }
 

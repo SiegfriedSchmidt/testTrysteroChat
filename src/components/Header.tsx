@@ -3,8 +3,18 @@ import StyledHeader from "../styles/Header.tsx";
 import {Link} from "react-router-dom";
 import Button from "./Button.tsx";
 import logo from "../assets/logo.png";
+import useUser from "../hooks/useUser.tsx";
 
 const Header = () => {
+  const {username, addUser} = useUser()
+
+  function onClick() {
+    const username = prompt('Set new username')
+    if (username) {
+      addUser({username: username})
+    }
+  }
+
   return (
     <StyledHeader>
       <Link to='/'>
@@ -17,7 +27,7 @@ const Header = () => {
         <Link to='/global_chat'><p>GlobalChat</p></Link>
       </nav>
       <nav>
-        <Button $color="black">Unknown</Button>
+        <Button onClick={onClick} $color="black">{username}</Button>
       </nav>
     </StyledHeader>
   );

@@ -5,6 +5,9 @@ import styled from "styled-components";
 import send from "../assets/send.svg"
 import MessagesBox from "../components/MessagesBox.tsx";
 import Message from "../components/Message.tsx";
+import useUser from "../hooks/useUser.tsx";
+import hashCode from "../utils/hash.ts";
+import message from "../components/Message.tsx";
 
 const roomId = 'kfwlakflwekflmvlfkleflaepqe'
 const config = {appId: 'my_best_app'}
@@ -41,13 +44,21 @@ const StyledDivSend = styled.div`
     align-items: center;
 `
 
+const StyledDivSyncMessages = styled.div`
+    display: flex;
+    justify-content: space-evenly;
+`
+
 const Main = () => {
   const [room, selfId] = useRoom(config, roomId)
+  const {username} = useUser()
   const textareaRef = useRef<HTMLTextAreaElement>(null)
   const [messages, setMessages] = useState<ChatMessageType[]>([])
   const [peerCount, setPeerCount] = useState<number>(1)
 
   const [sendMessage, getMessage] = room.makeAction('message')
+  const [sendPeersMessages, getPeersMessages] = room.makeAction('peermessage')
+  const [sendMessageRequest, getMessageRequest] = room.makeAction('messagereq')
 
   room.onPeerJoin((peerId: string) => {
     setPeerCount(peerCount + 1)
@@ -61,8 +72,17 @@ const Main = () => {
     setMessages([...messages, {message: message as MessageType, me: false}])
   })
 
+  function onClickSyncMessages() {
+    getPeersMessages((peers_messages, peer) => {
+      const new_messages = [...(peers_messages as MessageType[]), ...messages]
+
+    })
+    sendMessageRequest('')
+  }
+
   function CreateMessage(sender: string, text: string): MessageType {
-    return {sender, text, time: (new Date()).getTime()}
+    const newMessage = {sender, text, time: (new Date()).getTime()}
+    return {...newMessage, hash: hashCode(JSON.stringify(newMessage))}
   }
 
   function keyDownHandler(e: KeyboardEvent<HTMLTextAreaElement>) {
@@ -74,7 +94,7 @@ const Main = () => {
 
   function onClick() {
     if (textareaRef.current?.value) {
-      const message: MessageType = CreateMessage("Unknown", textareaRef.current.value)
+      const message: MessageType = CreateMessage(username, textareaRef.current.value)
       setMessages([...messages, {message, me: true}])
       sendMessage(message)
       textareaRef.current.value = ''
@@ -84,15 +104,17 @@ const Main = () => {
   return (
     <div style={{textAlign: "center"}}>
       <StyledDiv>
-      <h1>Online: {peerCount}</h1>
-      <MessagesBox messages={messages}/>
-      <StyledDivSend>
-        <StyledTextarea onKeyDown={keyDownHandler} rows={2} cols={30} ref={textareaRef} style={{}}/>
-        <StyledButton onClick={onClick}><img src={send} alt="send"/></StyledButton>
-      </StyledDivSend>
-    </StyledDiv>
+        <StyledDivSyncMessages>
+          <h1>Online: {peerCount}</h1>
+          <button onClick={onClickSyncMessages} style={{padding: '5px'}}>Sync messages</button>
+        </StyledDivSyncMessages>
+        <MessagesBox messages={messages}/>
+        <StyledDivSend>
+          <StyledTextarea onKeyDown={keyDownHandler} rows={2} cols={30} ref={textareaRef} style={{}}/>
+          <StyledButton onClick={onClick}><img src={send} alt="send"/></StyledButton>
+        </StyledDivSend>
+      </StyledDiv>
     </div>
-
   );
 };
 
