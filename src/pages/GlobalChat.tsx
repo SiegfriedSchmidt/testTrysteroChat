@@ -49,11 +49,6 @@ const StyledDivSyncMessages = styled.div`
     justify-content: space-evenly;
 `
 
-const StyledCheckBox = styled.input`
-    position: relative;
-    bottom: -10px;
-`
-
 type Peer = {
   username: string;
   sender_id: string;
