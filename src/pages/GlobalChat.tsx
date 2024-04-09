@@ -65,8 +65,9 @@ const Main = () => {
   const {room} = useRoom(config, roomId, userData.protocol)
   const textareaRef = useRef<HTMLTextAreaElement>(null)
   const [messages, setMessages] = useState<MessageType[]>([])
-  const [peerCount, setPeerCount] = useState<number>(1)
+  const [peerCount, setPeerCount] = useState<number>(0)
   const [allPeers, setAllPeers] = useState<Peer[]>([])
+  const [Loading, setLoading] = useState<boolean>(false)
 
   const [sendMessage, getMessage] = room.makeAction('message')
   const [sendPeersMessages, getPeersMessages] = room.makeAction('peermessage')
@@ -91,25 +92,23 @@ const Main = () => {
   })
 
   getUsernameRequest((data, peer) => {
-    sendUsername({username: user.username, sender_id: user.id})
+    sendUsername({username: user.username, sender_id: user.id} as Peer)
   })
 
   function getUniqueMessages(messages: MessageType[]): MessageType[] {
     const uniqueHashes: number[] = [];
     return messages.filter(element => {
       const isDuplicate = uniqueHashes.includes(element.hash);
-
       if (!isDuplicate) {
         uniqueHashes.push(element.hash);
-
         return true;
       }
-
       return false;
     })
   }
 
   function onClickSyncMessages() {
+    setLoading(true)
     getPeersMessages((peers_messages, peer) => {
       setMessages((messages) => {
         const new_messages: MessageType[] = [...(peers_messages as MessageType[]), ...messages]
@@ -124,20 +123,22 @@ const Main = () => {
     setTimeout(() => {
       getPeersMessages((peers_messages, peer) => {
       })
+      setLoading(false)
     }, 5000)
 
     sendMessageRequest('')
   }
 
   function onClickGetUsernames() {
+    setLoading(true)
     setAllPeers([])
     setPeerCount(0)
     getUsername((data, peer) => {
       setAllPeers((peers) => {
-        const uniquePeers = [...peers,].filter((value, index, array) => {
+        const uniquePeers = [...peers, data as Peer].filter((value, index, array) => {
           return array.indexOf(value) === index;
         })
-        setPeerCount(uniquePeers.length + 1)
+        setPeerCount(uniquePeers.length)
         return uniquePeers
       })
     })
@@ -145,6 +146,7 @@ const Main = () => {
     setTimeout(() => {
       getUsername((username, peer) => {
       })
+      setLoading(false)
     }, 5000)
 
     sendUsernameRequest('')
@@ -176,8 +178,8 @@ const Main = () => {
       <StyledDiv>
         <StyledDivSyncMessages>
           <h1>Online: {peerCount}</h1>
-          <button onClick={onClickSyncMessages} style={{padding: '5px'}}>Sync messages</button>
-          <button onClick={onClickGetUsernames} style={{padding: '5px'}}>Sync peers</button>
+          <button disabled={Loading} onClick={onClickSyncMessages} style={{padding: '5px'}}>Sync messages</button>
+          <button disabled={Loading} onClick={onClickGetUsernames} style={{padding: '5px'}}>Sync peers</button>
         </StyledDivSyncMessages>
         <MessagesBox messages={messages}/>
         <StyledDivSend>
