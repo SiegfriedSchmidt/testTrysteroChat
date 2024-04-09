@@ -2,10 +2,11 @@ import {FC} from 'react';
 import {MessageType} from "../types/chat.ts";
 import styled from "styled-components";
 import {stringToColour} from "../utils/colorManip.ts";
+import useUser from "../hooks/useUser.tsx";
+import getUsernameWithID from "../utils/getUsernameWithID.ts";
 
 interface MessageProps {
   message: MessageType
-  me: boolean
 }
 
 const StyledMessage = styled.div`
@@ -36,11 +37,10 @@ const StyledTimeSpan = styled.span`
     right: 0;
 `
 
-const StyledUsernameSpan = styled.span<{ $color: string }>`
+const StyledUsernameSpan = styled.span`
     padding: 3px;
     display: block;
     width: 100%;
-    color: ${props => props.$color};
     font-size: 10pt;
 `
 
@@ -62,16 +62,19 @@ const StyledDivRight = styled.div`
 `
 
 // const DateOptions: Intl.DateTimeFormatOptions = {hour: '2-digit', minute: '2-digit', hour12: false};
-const Message: FC<MessageProps> = ({message, me}) => {
+const Message: FC<MessageProps> = ({message}) => {
+  const {user} = useUser()
+  const me = message.sender_id == user.id
   const DivStyle = me ? StyledDivRight : StyledDivLeft
 
+  const {username_part, id_part} = getUsernameWithID(message.sender, message.sender_id)
   const date = (new Date(message.time)).toLocaleTimeString()
   return (
     <DivStyle>
       <StyledMessage>
         {me ?
           <></> :
-          <StyledUsernameSpan $color={stringToColour(message.sender)}><b>{message.sender}</b></StyledUsernameSpan>
+          <StyledUsernameSpan><b style={{color: stringToColour(message.sender + message.sender_id)}}>{username_part}</b>{id_part}</StyledUsernameSpan>
         }
 
         {message.text}

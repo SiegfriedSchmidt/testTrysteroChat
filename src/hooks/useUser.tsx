@@ -5,18 +5,13 @@ import {User} from "../types/user.ts";
 const useUser = () => {
   const {user, setUser} = useContext(UserContext)
 
-  function addUser(user: User) {
-    setUser(user)
-    localStorage.setItem("user", JSON.stringify(user))
+  function addUser(username: string) {
+    const new_user: User = {username: username, id: user.id}
+    setUser(new_user)
+    localStorage.setItem("user", JSON.stringify(new_user))
   }
 
-  function removeUser() {
-    setUser(null)
-    localStorage.removeItem("user")
-  }
-
-  const username = user ? user.username : 'Unknown'
-  return {username, addUser, removeUser}
+  return {user, addUser}
 }
 
 export default useUser

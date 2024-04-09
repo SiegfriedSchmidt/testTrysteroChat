@@ -1,7 +1,7 @@
 import React, {FC, useEffect, useRef} from 'react';
 import Message from "./Message.tsx";
 import styled from "styled-components";
-import {ChatMessageType} from "../types/chat.ts";
+import {MessageType} from "../types/chat.ts";
 
 const StyledDivMessages = styled.div`
     padding: 8px;
@@ -16,7 +16,7 @@ const StyledDivMessages = styled.div`
 `
 
 interface MessageBoxProps {
-  messages: ChatMessageType[];
+  messages: MessageType[];
 }
 
 const MessagesBox: FC<MessageBoxProps> = ({messages}) => {
@@ -29,7 +29,7 @@ const MessagesBox: FC<MessageBoxProps> = ({messages}) => {
   return (
     <StyledDivMessages ref={messagesRef}>
       {messages.map((message, idx) =>
-        <Message key={idx} message={message.message} me={message.me}/>
+        <Message key={idx} message={message}/>
       )}
     </StyledDivMessages>
   );

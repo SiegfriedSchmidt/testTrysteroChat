@@ -1,6 +1,6 @@
 import {useRoom} from "../hooks/useRoom.tsx";
 import {useRef, useState, KeyboardEvent} from "react";
-import {ChatMessageType, MessageType} from "../types/chat.ts";
+import {MessageType} from "../types/chat.ts";
 import styled from "styled-components";
 import send from "/send.svg"
 import MessagesBox from "../components/MessagesBox.tsx";
@@ -48,13 +48,18 @@ const StyledDivSyncMessages = styled.div`
     justify-content: space-evenly;
 `
 
+type Peer = {
+  username: string;
+  sender_id: string;
+}
+
 const Main = () => {
-  const [room, selfId] = useRoom(config, roomId)
-  const {username} = useUser()
+  const {room} = useRoom(config, roomId)
+  const {user} = useUser()
   const textareaRef = useRef<HTMLTextAreaElement>(null)
-  const [messages, setMessages] = useState<ChatMessageType[]>([])
+  const [messages, setMessages] = useState<MessageType[]>([])
   const [peerCount, setPeerCount] = useState<number>(1)
-  const [allPeers, setAllPeers] = useState<string[]>([])
+  const [allPeers, setAllPeers] = useState<Peer[]>([])
 
   const [sendMessage, getMessage] = room.makeAction('message')
   const [sendPeersMessages, getPeersMessages] = room.makeAction('peermessage')
@@ -71,16 +76,15 @@ const Main = () => {
   })
 
   getMessage((message, peer) => {
-    setMessages([...messages, {message: message as MessageType, me: false}])
+    setMessages([...messages, message as MessageType])
   })
 
   getMessageRequest((data, peer) => {
-    const messages_without_me: MessageType[] = messages.map((v) => v.message)
-    sendPeersMessages(messages_without_me)
+    sendPeersMessages(messages)
   })
 
   getUsernameRequest((data, peer) => {
-    sendUsername(username)
+    sendUsername({username: user.username, sender_id: user.id})
   })
 
   function getUniqueMessages(messages: MessageType[]): MessageType[] {
@@ -101,16 +105,12 @@ const Main = () => {
   function onClickSyncMessages() {
     getPeersMessages((peers_messages, peer) => {
       setMessages((messages) => {
-        const messages_without_me: MessageType[] = messages.map((v) => v.message)
-        const new_messages: MessageType[] = [...(peers_messages as MessageType[]), ...messages_without_me]
+        const new_messages: MessageType[] = [...(peers_messages as MessageType[]), ...messages]
         const new_unique_messages = getUniqueMessages(new_messages)
-        const completed_messages: ChatMessageType[] = new_unique_messages.map((v) => {
-          return {message: v, me: v.sender === username}
+        new_unique_messages.sort((lhs, rhs) => {
+          return lhs.time < rhs.time ? -1 : 1
         })
-        completed_messages.sort((lhs, rhs) => {
-          return lhs.message.time < rhs.message.time ? -1 : 1
-        })
-        return completed_messages
+        return new_unique_messages
       })
     })
 
@@ -125,9 +125,9 @@ const Main = () => {
   function onClickGetUsernames() {
     setAllPeers([])
     setPeerCount(0)
-    getUsername((username, peer) => {
+    getUsername((data, peer) => {
       setAllPeers((peers) => {
-        const uniquePeers = [...peers, username as string].filter((value, index, array) => {
+        const uniquePeers = [...peers,].filter((value, index, array) => {
           return array.indexOf(value) === index;
         })
         setPeerCount(uniquePeers.length + 1)
@@ -143,8 +143,8 @@ const Main = () => {
     sendUsernameRequest('')
   }
 
-  function CreateMessage(sender: string, text: string): MessageType {
-    const newMessage = {sender, text, time: (new Date()).getTime()}
+  function CreateMessage(sender: string, sender_id: string, text: string): MessageType {
+    const newMessage = {sender, text, sender_id, time: (new Date()).getTime()}
     return {...newMessage, hash: hashCode(JSON.stringify(newMessage))}
   }
 
@@ -157,8 +157,8 @@ const Main = () => {
 
   function onClick() {
     if (textareaRef.current?.value) {
-      const message: MessageType = CreateMessage(username, textareaRef.current.value)
-      setMessages([...messages, {message, me: true}])
+      const message: MessageType = CreateMessage(user.username, user.id, textareaRef.current.value)
+      setMessages([...messages, message])
       sendMessage(message)
       textareaRef.current.value = ''
     }

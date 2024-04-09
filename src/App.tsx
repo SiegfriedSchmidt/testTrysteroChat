@@ -11,6 +11,7 @@ import GlobalChat from "./pages/GlobalChat.tsx";
 import About from "./pages/About.tsx";
 import {UserContext} from "./context/UserContext.tsx";
 import {User} from "./types/user.ts";
+import {getNewUser} from "./utils/getNewUser.ts";
 
 const router = createBrowserRouter(createRoutesFromElements(
   <Route element={<RootLayout/>}>
@@ -21,9 +22,9 @@ const router = createBrowserRouter(createRoutesFromElements(
 ), {basename: import.meta.env.BASE_URL})
 
 function App() {
-  const [user, setUser] = useState<User | null>(() => {
+  const [user, setUser] = useState<User>(() => {
     const storedUser = localStorage.getItem("user");
-    return storedUser ? JSON.parse(storedUser) : null;
+    return storedUser ? JSON.parse(storedUser) : getNewUser();
   })
 
   return (

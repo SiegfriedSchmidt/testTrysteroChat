@@ -2,7 +2,7 @@ import {joinRoom} from "trystero/torrent";
 import {useEffect, useRef} from 'react'
 import {BaseRoomConfig, Room, selfId} from "trystero";
 
-export const useRoom = (roomConfig: BaseRoomConfig, roomId: string): [Room, string] => {
+export const useRoom = (roomConfig: BaseRoomConfig, roomId: string): {room: Room, selfId: string} => {
   const roomRef = useRef(joinRoom(roomConfig, roomId))
 
   useEffect(() => {
@@ -11,5 +11,5 @@ export const useRoom = (roomConfig: BaseRoomConfig, roomId: string): [Room, stri
     return () => roomRef.current.leave()
   }, [roomConfig, roomId])
 
-  return [roomRef.current, selfId]
+  return {room: roomRef.current, selfId: selfId}
 }

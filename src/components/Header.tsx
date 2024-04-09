@@ -4,14 +4,16 @@ import {Link} from "react-router-dom";
 import Button from "./Button.tsx";
 import logo from "/logo.png";
 import useUser from "../hooks/useUser.tsx";
+import getUsernameWithID from "../utils/getUsernameWithID.ts";
 
 const Header = () => {
-  const {username, addUser} = useUser()
+  const {user, addUser} = useUser()
+  const {username_part, id_part} = getUsernameWithID(user.username, user.id)
 
   function onClick() {
-    const username = prompt('Set new username')
+    const username = prompt('Set new username', user.username)
     if (username) {
-      addUser({username: username})
+      addUser(username)
     }
   }
 
@@ -27,7 +29,10 @@ const Header = () => {
         <Link to='/global_chat'><p>GlobalChat</p></Link>
       </nav>
       <nav>
-        <Button onClick={onClick} $color="black">{username}</Button>
+        <div>
+          <Button onClick={onClick} $color="black">{username_part}</Button>
+        <p>{id_part}</p>
+        </div>
       </nav>
     </StyledHeader>
   );
