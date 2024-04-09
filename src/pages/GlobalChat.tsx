@@ -60,9 +60,9 @@ type Peer = {
 }
 
 const Main = () => {
-  const {room} = useRoom(config, roomId)
   const {user} = useUser()
   const {userData} = useContext(UserDataContext)
+  const {room} = useRoom(config, roomId, userData.protocol)
   const textareaRef = useRef<HTMLTextAreaElement>(null)
   const [messages, setMessages] = useState<MessageType[]>([])
   const [peerCount, setPeerCount] = useState<number>(1)
