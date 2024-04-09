@@ -1,6 +1,7 @@
 import {useState} from 'react'
 import {
   createBrowserRouter,
+  createHashRouter,
   createRoutesFromElements,
   RouterProvider,
   Route
@@ -13,15 +14,14 @@ import {UserContext} from "./context/UserContext.tsx";
 import {User, UserData} from "./types/user.ts";
 import {getNewUser} from "./utils/getNewUser.ts";
 import {UserDataContext} from "./context/UserDataContext.tsx";
-import {Protocol} from "./types/protocols.ts";
 
-const router = createBrowserRouter(createRoutesFromElements(
+const router = createHashRouter(createRoutesFromElements(
   <Route element={<RootLayout/>}>
     <Route index element={<Home/>}/>
     <Route path="/global_chat" element={<GlobalChat/>}/>
     <Route path="/about" element={<About/>}/>
   </Route>
-), {basename: import.meta.env.BASE_URL})
+))
 
 function App() {
   const [user, setUser] = useState<User>(() => {
