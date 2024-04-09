@@ -2,6 +2,8 @@ import React, {FC, useContext} from 'react';
 import styled from "styled-components";
 import CheckboxWithLabel from "./CheckboxWithLabel.tsx";
 import {UserDataContext} from "../context/UserDataContext.tsx";
+import SelectWithLabel from "./SelectWithLabel.tsx";
+import {Protocol, Protocols} from "../types/protocols.ts";
 
 const StyledDiv = styled.div<{ $isOpen: boolean }>`
     opacity: ${props => props.$isOpen ? "1" : "0"};
@@ -27,10 +29,16 @@ const HiddenParams: FC<HiddenParamsProps> = ({visible}) => {
     setUserData({...userData, html_parse: val})
   }
 
+  function onChangeProtocolSelection(val: string) {
+    setUserData({...userData, protocol: val as Protocol})
+  }
+
   return (
     <StyledDiv $isOpen={visible}>
       <h3>Panel only for firefly enjoyers :)</h3>
       <CheckboxWithLabel checked={userData.html_parse} label='Parse html' onChange={onChangeHtmlParse}/>
+      <SelectWithLabel label="Protocol" selection={Protocols} default_val={userData.protocol}
+                       onChange={onChangeProtocolSelection}/>
     </StyledDiv>
   );
 };

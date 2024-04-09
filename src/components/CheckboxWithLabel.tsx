@@ -13,10 +13,15 @@ const StyledDiv = styled.div`
     justify-content: space-between;
     align-items: center;
     flex-wrap: wrap;
-    padding: 1rem;
+    padding-top: 1rem;
 
     p {
-        font-size: 20px;
+        font-size: 15pt;
+    }
+    
+    input {
+        width: 20px;
+        height: 20px;
     }
 `
 

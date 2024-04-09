@@ -13,6 +13,7 @@ import {UserContext} from "./context/UserContext.tsx";
 import {User, UserData} from "./types/user.ts";
 import {getNewUser} from "./utils/getNewUser.ts";
 import {UserDataContext} from "./context/UserDataContext.tsx";
+import {Protocol} from "./types/protocols.ts";
 
 const router = createBrowserRouter(createRoutesFromElements(
   <Route element={<RootLayout/>}>
@@ -28,7 +29,9 @@ function App() {
     return storedUser ? JSON.parse(storedUser) : getNewUser();
   })
 
-  const [userData, setUserData] = useState<UserData>({firefly: false})
+  const [userData, setUserData] = useState<UserData>(
+    {firefly: false, html_parse: false, protocol: 'torrent'},
+  )
 
   return (
     <UserDataContext.Provider value={{userData, setUserData}}>
