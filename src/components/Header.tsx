@@ -26,7 +26,7 @@ const Header = () => {
         <Link to='/about'><p>About</p></Link>
       </nav>
       <nav>
-        <Link to='/global_chat'><p>GlobalChat</p></Link>
+        <Link to='/global_chat'><p>Global</p></Link>
       </nav>
       <nav>
         <div>

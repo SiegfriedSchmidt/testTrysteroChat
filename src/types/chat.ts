@@ -1,1 +1,8 @@
-export type MessageType = { sender: string, sender_id: string, text: string, time: number, hash: number }
+export type MessageType = {
+  sender: string,
+  sender_id: string,
+  text: string,
+  time: number,
+  hash: number,
+  html_parse: boolean
+}

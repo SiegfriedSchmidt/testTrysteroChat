@@ -1,11 +1,12 @@
 import {useRoom} from "../hooks/useRoom.tsx";
-import {useRef, useState, KeyboardEvent} from "react";
+import {useRef, useState, KeyboardEvent, useContext} from "react";
 import {MessageType} from "../types/chat.ts";
 import styled from "styled-components";
 import send from "/send.svg"
 import MessagesBox from "../components/MessagesBox.tsx";
 import useUser from "../hooks/useUser.tsx";
 import hashCode from "../utils/hash.ts";
+import {UserDataContext} from "../context/UserDataContext.tsx";
 
 
 const roomId = 'kfwlakflwekflmvlfkleflaepqe'
@@ -48,6 +49,11 @@ const StyledDivSyncMessages = styled.div`
     justify-content: space-evenly;
 `
 
+const StyledCheckBox = styled.input`
+    position: relative;
+    bottom: -10px;
+`
+
 type Peer = {
   username: string;
   sender_id: string;
@@ -56,6 +62,7 @@ type Peer = {
 const Main = () => {
   const {room} = useRoom(config, roomId)
   const {user} = useUser()
+  const {userData} = useContext(UserDataContext)
   const textareaRef = useRef<HTMLTextAreaElement>(null)
   const [messages, setMessages] = useState<MessageType[]>([])
   const [peerCount, setPeerCount] = useState<number>(1)
@@ -143,21 +150,21 @@ const Main = () => {
     sendUsernameRequest('')
   }
 
-  function CreateMessage(sender: string, sender_id: string, text: string): MessageType {
-    const newMessage = {sender, text, sender_id, time: (new Date()).getTime()}
+  function CreateMessage(sender: string, sender_id: string, text: string, html_parse: boolean): MessageType {
+    const newMessage = {sender, text, sender_id, html_parse, time: (new Date()).getTime()}
     return {...newMessage, hash: hashCode(JSON.stringify(newMessage))}
   }
 
   function keyDownHandler(e: KeyboardEvent<HTMLTextAreaElement>) {
-    if (e.key === 'Enter') {
-      e.preventDefault()
-      onClick()
-    }
+    // if (e.key === 'Enter') {
+    //   e.preventDefault()
+    //   onClick()
+    // }
   }
 
   function onClick() {
     if (textareaRef.current?.value) {
-      const message: MessageType = CreateMessage(user.username, user.id, textareaRef.current.value)
+      const message: MessageType = CreateMessage(user.username, user.id, textareaRef.current.value, userData.html_parse)
       setMessages([...messages, message])
       sendMessage(message)
       textareaRef.current.value = ''

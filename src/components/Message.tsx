@@ -1,9 +1,10 @@
-import {FC} from 'react';
+import {FC, useContext} from 'react';
 import {MessageType} from "../types/chat.ts";
 import styled from "styled-components";
 import {stringToColour} from "../utils/colorManip.ts";
 import useUser from "../hooks/useUser.tsx";
 import getUsernameWithID from "../utils/getUsernameWithID.ts";
+import parse from 'html-react-parser';
 
 interface MessageProps {
   message: MessageType
@@ -18,7 +19,6 @@ const StyledMessage = styled.div`
     border-radius: 10px 10px 10px 10px;
     color: black;
     font-size: 14pt;
-    max-width: 80%;
     min-width: 30%;
     word-wrap: break-word;
     -webkit-box-shadow: 0 5px 10px 2px rgba(34, 60, 80, 0.2) inset;
@@ -74,10 +74,11 @@ const Message: FC<MessageProps> = ({message}) => {
       <StyledMessage>
         {me ?
           <></> :
-          <StyledUsernameSpan><b style={{color: stringToColour(message.sender + message.sender_id)}}>{username_part}</b>{id_part}</StyledUsernameSpan>
+          <StyledUsernameSpan><b
+            style={{color: stringToColour(message.sender + message.sender_id)}}>{username_part}</b>{id_part}
+          </StyledUsernameSpan>
         }
-
-        {message.text}
+        {message.html_parse ? parse(message.text) : message.text}
         <StyledTimeSpan>{date}</StyledTimeSpan>
       </StyledMessage>
     </DivStyle>

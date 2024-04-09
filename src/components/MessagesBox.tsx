@@ -11,7 +11,7 @@ const StyledDivMessages = styled.div`
     box-shadow: 0 5px 10px 2px rgba(34, 60, 80, 0.2) inset;
     border-radius: 5px;
     height: 74vh;
-    overflow-x: hidden;
+    overflow-x: auto;
     position: relative;
 `
 
