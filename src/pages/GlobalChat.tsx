@@ -10,7 +10,6 @@ import {UserDataContext} from "../context/UserDataContext.tsx";
 
 
 const roomId = 'kfwlakflwekflmvlfkleflaepqe'
-const config = {appId: 'my_best_app'}
 
 const StyledDiv = styled.div`
     margin: 0 auto;
@@ -57,7 +56,7 @@ type Peer = {
 const Main = () => {
   const {user} = useUser()
   const {userData} = useContext(UserDataContext)
-  const {room} = useRoom(config, roomId, userData.protocol)
+  const {room} = useRoom(roomId, userData.protocol)
   const textareaRef = useRef<HTMLTextAreaElement>(null)
   const [messages, setMessages] = useState<MessageType[]>([])
   const [peerCount, setPeerCount] = useState<number>(0)
