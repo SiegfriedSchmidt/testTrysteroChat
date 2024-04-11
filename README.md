@@ -113,4 +113,4 @@ vite
 The Dev server will run on the local network
 on port 8000
 
-## Also don't forget to add an star to the repository :)
+## Also don't forget to add a star to the repository :)
