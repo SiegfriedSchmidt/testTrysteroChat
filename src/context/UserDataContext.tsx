@@ -1,6 +1,5 @@
 import {createContext} from "react";
 import {UserData} from "../types/user.ts";
-import {Protocol} from "../types/protocols.ts";
 
 interface UserDataSetter {
   userData: UserData

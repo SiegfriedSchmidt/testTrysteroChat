@@ -1,6 +1,5 @@
 import {useState} from 'react'
 import {
-  createBrowserRouter,
   createHashRouter,
   createRoutesFromElements,
   RouterProvider,
@@ -30,7 +29,7 @@ function App() {
   })
 
   const [userData, setUserData] = useState<UserData>(
-    {firefly: false, html_parse: false, protocol: 'torrent'},
+    {firefly: false, html_parse: false, protocol: 'firebase'},
   )
 
   return (
