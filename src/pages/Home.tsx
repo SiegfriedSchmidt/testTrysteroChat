@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from "styled-components";
 import ParticleImage from "../components/ParticleImage.tsx";
-import logo from "/logo.png"
+import firefly from "/firefly.png"
 
 const StyledDiv = styled.div`
     text-align: center;
@@ -12,7 +12,7 @@ const Home = () => {
   return (
     <StyledDiv>
       {/*<h1>Just home page, nothing interesting here...</h1>*/}
-      <ParticleImage imageUrl={logo} imageWidth={400} imageHeight={400} gap={5} pushD={25}/>
+      <ParticleImage width={380} height={700} imageUrl={firefly} imageWidth={357} imageHeight={698} gap={3} pushD={25}/>
     </StyledDiv>
   );
 };

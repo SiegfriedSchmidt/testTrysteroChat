@@ -1,4 +1,4 @@
-import {FC, useEffect, useRef} from 'react';
+import {CanvasHTMLAttributes, FC, useEffect, useRef} from 'react';
 
 function Random(max: number) {
   return Math.random() * max
@@ -95,7 +95,13 @@ class Effect {
             color = `rgba(${av}, 0, 0, ${alpha / 255})`
           }
 
-          this.particles.push(new Particle(Random(this.width), Random(this.height), x, y, this.gap, color, this.speed, this.draw))
+          this.particles.push(new Particle(
+            Random(this.ctx.canvas.width),
+            Random(this.ctx.canvas.height),
+            x + (this.ctx.canvas.width - this.width) / 2,
+            y + (this.ctx.canvas.height - this.height) / 2,
+            this.gap,
+            color, this.speed, this.draw))
         }
       }
     }
@@ -106,7 +112,7 @@ class Effect {
   }
 
   Update() {
-    this.ctx.clearRect(0, 0, this.width, this.height)
+    this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height)
     this.particles.forEach(p => p.render())
   }
 }
@@ -123,7 +129,7 @@ function pushParticles(x: number, y: number, d: number, effect: Effect) {
   })
 }
 
-interface ParticleImageProps {
+interface ParticleImageProps extends CanvasHTMLAttributes<HTMLCanvasElement> {
   imageUrl: string
   imageWidth: number
   imageHeight: number
@@ -141,12 +147,13 @@ const ParticleImage: FC<ParticleImageProps> =
      pushD,
      imageHeight,
      mode = false,
-     setPushImage
+     setPushImage,
+     ...props
    }) => {
     const canvasRef = useRef<HTMLCanvasElement>(null)
     const imageRef = useRef<HTMLImageElement>(null)
     const requestRef = useRef(0)
-    const speed = 0.05
+    const speed = 0.02
 
     function Update(effect: Effect) {
       effect.Update()
@@ -160,7 +167,7 @@ const ParticleImage: FC<ParticleImageProps> =
       const image = imageRef.current as HTMLImageElement
       const ctx = canvas.getContext('2d', {willReadFrequently: true}) as CanvasRenderingContext2D
       const draw = new Draw(ctx)
-      const effect = new Effect(imageWidth, imageHeight, gap, speed, ctx, draw, mode)
+      const effect = new Effect(imageHeight, imageWidth, gap, speed, ctx, draw, mode)
       effect.initParticles(image)
       Update(effect)
       canvas.addEventListener('mousemove', (e) => {
@@ -182,7 +189,7 @@ const ParticleImage: FC<ParticleImageProps> =
     return (
       <div>
         <img ref={imageRef} src={imageUrl} alt="logo" hidden/>
-        <canvas style={{width: "100%", height: "80vh"}} ref={canvasRef}></canvas>
+        <canvas width="800" height="800" ref={canvasRef} {...props}></canvas>
       </div>
     );
   };
