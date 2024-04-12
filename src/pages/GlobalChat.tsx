@@ -152,10 +152,10 @@ const Main = () => {
   }
 
   function keyDownHandler(e: KeyboardEvent<HTMLTextAreaElement>) {
-    // if (e.key === 'Enter') {
-    //   e.preventDefault()
-    //   onClick()
-    // }
+    if (e.key === 'Enter') {
+      e.preventDefault()
+      onClick()
+    }
   }
 
   function onClick() {
