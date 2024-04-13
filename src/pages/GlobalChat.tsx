@@ -7,6 +7,7 @@ import MessagesBox from "../components/MessagesBox.tsx";
 import useUser from "../hooks/useUser.tsx";
 import hashCode from "../utils/hash.ts";
 import {UserDataContext} from "../context/UserDataContext.tsx";
+import getUniqueMessages from "../utils/getUniqueMessages.ts";
 
 
 const roomId = 'kfwlakflwekflmvlfkleflaepqe'
@@ -88,18 +89,6 @@ const Main = () => {
   getUsernameRequest((data, peer) => {
     sendUsername({username: user.username, sender_id: user.id} as Peer)
   })
-
-  function getUniqueMessages(messages: MessageType[]): MessageType[] {
-    const uniqueHashes: number[] = [];
-    return messages.filter(element => {
-      const isDuplicate = uniqueHashes.includes(element.hash);
-      if (!isDuplicate) {
-        uniqueHashes.push(element.hash);
-        return true;
-      }
-      return false;
-    })
-  }
 
   function onClickSyncMessages() {
     setLoading(true)

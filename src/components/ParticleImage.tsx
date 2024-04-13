@@ -189,7 +189,7 @@ const ParticleImage: FC<ParticleImageProps> =
     return (
       <div>
         <img ref={imageRef} src={imageUrl} alt="logo" hidden/>
-        <canvas width="800" height="800" ref={canvasRef} {...props}></canvas>
+        <canvas ref={canvasRef} {...props}></canvas>
       </div>
     );
   };

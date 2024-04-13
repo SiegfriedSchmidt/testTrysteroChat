@@ -29,8 +29,8 @@ export const useRoom = (roomId: string, protocol: Protocol): {
   const roomRef = useRef(joinRoom(roomId, protocol))
 
   useEffect(() => {
-    console.log('connected')
     roomRef.current = joinRoom(roomId, protocol)
+    console.log('connected')
     return () => roomRef.current.leave()
   }, [roomId, protocol])
 
