@@ -20,6 +20,15 @@ class Draw {
   }
 }
 
+function shuffleArray(array: Particle[]) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    const temp = array[i];
+    array[i] = array[j];
+    array[j] = temp;
+  }
+}
+
 class Particle {
   public x: number;
   public y: number;
@@ -56,6 +65,7 @@ class Particle {
 class Effect {
   public particles: Particle[];
   private pixels: Uint8ClampedArray;
+  private currentParticles = 0
 
   constructor(
     private readonly height: number,
@@ -96,8 +106,8 @@ class Effect {
           }
 
           this.particles.push(new Particle(
-            Random(this.ctx.canvas.width),
-            Random(this.ctx.canvas.height),
+            this.ctx.canvas.width / 2,
+            this.ctx.canvas.width / 2,
             x + (this.ctx.canvas.width - this.width) / 2,
             y + (this.ctx.canvas.height - this.height) / 2,
             this.gap,
@@ -109,11 +119,17 @@ class Effect {
       console.log('empty particles')
       this.initParticles(image)
     }, 1000)
+    shuffleArray(this.particles)
   }
 
   Update() {
     this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height)
-    this.particles.forEach(p => p.render())
+    for (let i = 0; i < this.currentParticles; i++) {
+      this.particles[i].render()
+    }
+    if (this.currentParticles + 1 < this.particles.length) {
+      this.currentParticles += 10
+    }
   }
 }
 
@@ -153,7 +169,7 @@ const ParticleImage: FC<ParticleImageProps> =
     const canvasRef = useRef<HTMLCanvasElement>(null)
     const imageRef = useRef<HTMLImageElement>(null)
     const requestRef = useRef(0)
-    const speed = 0.02
+    const speed = 0.03
 
     function Update(effect: Effect) {
       effect.Update()
