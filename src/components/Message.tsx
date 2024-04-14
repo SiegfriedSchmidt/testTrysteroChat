@@ -1,4 +1,4 @@
-import {FC, useContext} from 'react';
+import {FC} from 'react';
 import {MessageType} from "../types/chat.ts";
 import styled from "styled-components";
 import {stringToColour} from "../utils/colorManip.ts";
@@ -68,7 +68,7 @@ const Message: FC<MessageProps> = ({message}) => {
   const DivStyle = me ? StyledDivRight : StyledDivLeft
 
   const {username_part, id_part} = getUsernameWithID(message.sender, message.sender_id)
-  const date = (new Date(message.time)).toLocaleTimeString()
+  const date = (new Date(message.time)).toLocaleTimeString('RU-ru')
   return (
     <DivStyle>
       <StyledMessage>

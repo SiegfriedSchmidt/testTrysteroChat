@@ -1,13 +1,13 @@
 import {useRoom} from "../hooks/useRoom.tsx";
-import {useRef, useState, KeyboardEvent, useContext} from "react";
+import {useRef, useState, KeyboardEvent} from "react";
 import {MessageType} from "../types/chat.ts";
 import styled from "styled-components";
 import send from "/send.svg"
 import MessagesBox from "../components/MessagesBox.tsx";
 import useUser from "../hooks/useUser.tsx";
 import hashCode from "../utils/hash.ts";
-import {UserDataContext} from "../context/UserDataContext.tsx";
 import getUniqueMessages from "../utils/getUniqueMessages.ts";
+import useUserData from "../hooks/useUserData.tsx";
 
 
 const roomId = 'kfwlakflwekflmvlfkleflaepqe'
@@ -56,7 +56,7 @@ type Peer = {
 
 const Main = () => {
   const {user} = useUser()
-  const {userData} = useContext(UserDataContext)
+  const {userData} = useUserData()
   const {room} = useRoom(roomId, userData.protocol)
   const textareaRef = useRef<HTMLTextAreaElement>(null)
   const [messages, setMessages] = useState<MessageType[]>([])

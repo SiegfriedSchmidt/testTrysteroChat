@@ -11,8 +11,9 @@ import GlobalChat from "./pages/GlobalChat.tsx";
 import About from "./pages/About.tsx";
 import {UserContext} from "./context/UserContext.tsx";
 import {User, UserData} from "./types/user.ts";
-import {getNewUser} from "./utils/getNewUser.ts";
+import {getDefaultUser} from "./defaultContext/getDefaultUser.ts";
 import {UserDataContext} from "./context/UserDataContext.tsx";
+import {getDefaultUserData} from "./defaultContext/getDefaultUserData.ts";
 
 const router = createHashRouter(createRoutesFromElements(
   <Route element={<RootLayout/>}>
@@ -23,14 +24,8 @@ const router = createHashRouter(createRoutesFromElements(
 ))
 
 function App() {
-  const [user, setUser] = useState<User>(() => {
-    const storedUser = localStorage.getItem("user");
-    return storedUser ? JSON.parse(storedUser) : getNewUser();
-  })
-
-  const [userData, setUserData] = useState<UserData>(
-    {firefly: false, html_parse: false, protocol: 'firebase'},
-  )
+  const [user, setUser] = useState<User>(getDefaultUser)
+  const [userData, setUserData] = useState<UserData>(getDefaultUserData)
 
   return (
     <UserDataContext.Provider value={{userData, setUserData}}>

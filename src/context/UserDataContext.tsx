@@ -1,5 +1,6 @@
 import {createContext} from "react";
 import {UserData} from "../types/user.ts";
+import {getDefaultUserData} from "../defaultContext/getDefaultUserData.ts";
 
 interface UserDataSetter {
   userData: UserData
@@ -8,7 +9,7 @@ interface UserDataSetter {
 
 
 export const UserDataContext = createContext<UserDataSetter>({
-  userData: {firefly: false, html_parse: false, protocol: 'torrent'},
+  userData: getDefaultUserData(),
   setUserData: () => {
   },
 })

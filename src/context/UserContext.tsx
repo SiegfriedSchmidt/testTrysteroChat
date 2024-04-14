@@ -1,6 +1,6 @@
 import {createContext} from "react";
 import {User} from "../types/user.ts";
-import {getNewUser} from "../utils/getNewUser.ts";
+import {getDefaultUser} from "../defaultContext/getDefaultUser.ts";
 
 interface UserSetter {
   user: User
@@ -9,6 +9,6 @@ interface UserSetter {
 
 
 export const UserContext = createContext<UserSetter>({
-  user: getNewUser(),
+  user: getDefaultUser(),
   setUser: () => {},
 })

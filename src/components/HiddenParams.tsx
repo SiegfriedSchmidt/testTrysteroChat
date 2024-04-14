@@ -1,9 +1,9 @@
-import React, {FC, useContext} from 'react';
+import React, {FC} from 'react';
 import styled from "styled-components";
 import CheckboxWithLabel from "./CheckboxWithLabel.tsx";
-import {UserDataContext} from "../context/UserDataContext.tsx";
 import SelectWithLabel from "./SelectWithLabel.tsx";
 import {Protocol, Protocols} from "../types/protocols.ts";
+import useUserData from "../hooks/useUserData.tsx";
 
 const StyledDiv = styled.div<{ $isOpen: boolean }>`
     opacity: ${props => props.$isOpen ? "1" : "0"};
@@ -23,7 +23,7 @@ interface HiddenParamsProps {
 }
 
 const HiddenParams: FC<HiddenParamsProps> = ({visible}) => {
-  const {userData, setUserData} = useContext(UserDataContext);
+  const {userData, setUserData} = useUserData();
 
   function onChangeHtmlParse(val: boolean) {
     setUserData({...userData, html_parse: val})

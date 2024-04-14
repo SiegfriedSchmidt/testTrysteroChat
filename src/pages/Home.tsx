@@ -1,9 +1,9 @@
-import React, {useContext} from 'react';
+import React from 'react';
 import styled from "styled-components";
 import ParticleImage from "../components/ParticleImage.tsx";
-import {UserDataContext} from "../context/UserDataContext.tsx";
 import firefly from "/firefly.png"
 import logo from "/logo.png"
+import useUserData from "../hooks/useUserData.tsx";
 
 
 const StyledDiv = styled.div`
@@ -12,7 +12,7 @@ const StyledDiv = styled.div`
 `
 
 const Home = () => {
-  const {userData} = useContext(UserDataContext);
+  const {userData} = useUserData();
 
   return (
     <StyledDiv>

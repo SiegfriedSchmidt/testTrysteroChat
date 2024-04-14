@@ -1,7 +1,7 @@
-import React, {useContext} from 'react';
+import React from 'react';
 import styled from "styled-components";
-import {UserDataContext} from "../context/UserDataContext.tsx";
 import HiddenParams from "../components/HiddenParams.tsx";
+import useUserData from "../hooks/useUserData.tsx";
 
 
 const StyledDiv = styled.div`
@@ -16,7 +16,7 @@ const StyledP = styled.p<{ $color: boolean }>`
 `
 
 const About = () => {
-  const {userData, setUserData} = useContext(UserDataContext);
+  const {userData, setUserData} = useUserData();
 
   function onClick() {
     setUserData({...userData, firefly: !userData.firefly})
