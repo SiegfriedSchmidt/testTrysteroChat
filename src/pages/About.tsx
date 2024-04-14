@@ -11,7 +11,7 @@ const StyledDiv = styled.div`
 const StyledP = styled.p<{ $color: boolean }>`
     color: ${props => props.$color ? "red" : "#a1a1a1"};
     position: absolute;
-    bottom: 1%;
+    bottom: -7%;
     right: 3%;
 `
 
@@ -24,7 +24,11 @@ const About = () => {
 
   return (
     <StyledDiv>
-      <h1>Council of 3 men, cheese and fucked came up with the idea for this site</h1>
+      {
+        userData.firefly ? <h1>Council of 3 men, cheese and fucked came up with the idea for this site</h1> :
+          <h1>Just about page, nothing interesting here...</h1>
+      }
+
       <HiddenParams visible={userData.firefly}/>
       <StyledP $color={userData.firefly} onClick={onClick}>Firefly is the best btw</StyledP>
     </StyledDiv>
