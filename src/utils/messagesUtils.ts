@@ -28,3 +28,7 @@ export function sortMessages(messages: MessageType[]) {
 export function getMessagesHashes(messages: MessageType[]): number[] {
   return messages.map(({hash}) => hash)
 }
+
+export function getMissingMessages(hashes: number[], messages: MessageType[]) {
+  return messages.filter(message => !hashes.includes(message.hash))
+}

@@ -4,15 +4,14 @@ import {MessageType, Peers} from "../types/chat.ts";
 import styled from "styled-components";
 import MessagesBox from "../components/MessagesBox.tsx";
 import useUser from "../hooks/useUser.tsx";
-import getUniqueMessages from "../utils/getUniqueMessages.ts";
 import useUserData from "../hooks/useUserData.tsx";
 import SendingBlock from "../components/SendingBlock.tsx";
 import useRoomAction from "../hooks/useRoomAction.tsx";
 import ChatBottomPanel from "../components/ChatBottomPanel.tsx";
 import {globalRoomId} from "../utils/constants.ts";
 import {User} from "../types/user.ts";
-import {createMessage, getMessagesHashes, sortMessages} from "../utils/messagesUtils.ts";
-import {DataPayload} from "trystero";
+import {createMessage, getMessagesHashes, getMissingMessages, sortMessages} from "../utils/messagesUtils.ts";
+import syncMessagesWithPeers from "../utils/syncMessagesWithPeers.ts";
 
 const StyledDiv = styled.div`
     margin: 0 auto;
@@ -64,17 +63,16 @@ const Main = () => {
   })
 
   getMessagesRequest((hashes, peerId) => {
-    console.log(hashes)
+    const missingMessages = getMissingMessages(hashes as number[], messages)
+    sendPeersMessages(missingMessages)
   })
 
-  getPeersMessages((peers_messages, peerId) => {
-    setMessages((messages) => {
-      return sortMessages([...peers_messages as MessageType[], ...messages])
-    })
-  })
-
-  function onClickSyncMessages() {
-    sendMessagesRequest(getMessagesHashes(messages))
+  async function onClickSyncMessages() {
+    setLoading(true)
+    const hashes = getMessagesHashes(messages)
+    const newMessages = await syncMessagesWithPeers(peers, hashes, sendMessagesRequest, getPeersMessages)
+    setMessages([...messages, ...newMessages])
+    setLoading(false)
   }
 
   function onClickSend() {
