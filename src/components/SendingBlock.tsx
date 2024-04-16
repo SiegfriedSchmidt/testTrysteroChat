@@ -1,4 +1,4 @@
-import React, {FC, KeyboardEvent, Ref} from 'react';
+import React, {FC, KeyboardEvent, useRef} from 'react';
 import more from "/more.png";
 import send from "/send.svg";
 import styled from "styled-components";
@@ -25,11 +25,12 @@ const StyledDivSend = styled.div`
 `
 
 interface SendingBlockProps {
-  textRef: Ref<HTMLTextAreaElement>;
-  onClick: () => void
+  onClickSend: (text: string) => void
 }
 
-const SendingBlock: FC<SendingBlockProps> = ({textRef, onClick}) => {
+const SendingBlock: FC<SendingBlockProps> = ({onClickSend}) => {
+  const textareaRef = useRef<HTMLTextAreaElement>(null)
+
   function keyDownHandler(e: KeyboardEvent<HTMLTextAreaElement>) {
     if (e.key === 'Enter') {
       e.preventDefault()
@@ -37,10 +38,17 @@ const SendingBlock: FC<SendingBlockProps> = ({textRef, onClick}) => {
     }
   }
 
+  function onClick() {
+    if (textareaRef.current?.value) {
+      onClickSend(textareaRef.current.value)
+      textareaRef.current.value = ''
+    }
+  }
+
   return (
     <StyledDivSend>
       <StyledButton><img src={more} alt="send"/></StyledButton>
-      <StyledTextarea onKeyDown={keyDownHandler} rows={2} cols={30} ref={textRef} style={{}}/>
+      <StyledTextarea onKeyDown={keyDownHandler} rows={2} cols={30} ref={textareaRef}/>
       <StyledButton onClick={onClick}><img src={send} alt="send"/></StyledButton>
     </StyledDivSend>
   );

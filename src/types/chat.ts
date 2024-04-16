@@ -1,12 +1,20 @@
 import {User} from "./user.ts";
 
-export type MessageType = {
-  sender: string,
-  sender_id: string,
+export type MessageBaseType = {
+  sender: string
+  sender_id: string
+  time: number
+  hash: number
+}
+
+export type MessageTextType = MessageBaseType & {
   text: string,
-  time: number,
-  hash: number,
   html_parse: boolean
+}
+
+export type MessageFileType = MessageBaseType & {
+  content: Blob
+  metadata: string
 }
 
 export type Peers = { [peerId: string]: User };
