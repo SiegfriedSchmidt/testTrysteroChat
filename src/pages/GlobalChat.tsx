@@ -63,15 +63,14 @@ const Main = () => {
   })
 
   getMessagesRequest((hashes, peerId) => {
-    const missingMessages = getMissingMessages(hashes as number[], messages)
-    sendPeersMessages(missingMessages)
+    sendPeersMessages(getMissingMessages(hashes as number[], messages))
   })
 
   async function onClickSyncMessages() {
     setLoading(true)
     const hashes = getMessagesHashes(messages)
     const newMessages = await syncMessagesWithPeers(peers, hashes, sendMessagesRequest, getPeersMessages)
-    setMessages([...messages, ...newMessages])
+    setMessages(sortMessages([...messages, ...newMessages]))
     setLoading(false)
   }
 
