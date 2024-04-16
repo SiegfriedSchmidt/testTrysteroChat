@@ -1,13 +1,15 @@
 import {useRoom} from "../hooks/useRoom.tsx";
-import {useRef, useState, KeyboardEvent} from "react";
+import {useRef, useState, KeyboardEvent, useEffect, useMemo} from "react";
 import {MessageType} from "../types/chat.ts";
 import styled from "styled-components";
-import send from "/send.svg"
 import MessagesBox from "../components/MessagesBox.tsx";
 import useUser from "../hooks/useUser.tsx";
 import hashCode from "../utils/hash.ts";
 import getUniqueMessages from "../utils/getUniqueMessages.ts";
 import useUserData from "../hooks/useUserData.tsx";
+import SendingBlock from "../components/SendingBlock.tsx";
+import useRoomAction from "../hooks/useRoomAction.tsx";
+import ChatBottomPanel from "../components/ChatBottomPanel.tsx";
 
 
 const roomId = 'kfwlakflwekflmvlfkleflaepqe'
@@ -21,32 +23,6 @@ const StyledDiv = styled.div`
     h1 {
         font-size: 15pt;
     }
-`
-
-const StyledTextarea = styled.textarea`
-    font-size: 15pt;
-    padding: 10px;
-    margin: 10px;
-`
-
-const StyledButton = styled.div`
-    img {
-        width: 40px;
-        height: 40px;
-    }
-`
-
-const StyledDivSend = styled.div`
-    display: flex;
-    flex-direction: row;
-    vertical-align: center;
-    justify-content: space-evenly;
-    align-items: center;
-`
-
-const StyledDivSyncMessages = styled.div`
-    display: flex;
-    justify-content: space-evenly;
 `
 
 type Peer = {
@@ -64,31 +40,33 @@ const Main = () => {
   const [allPeers, setAllPeers] = useState<Peer[]>([])
   const [Loading, setLoading] = useState<boolean>(false)
 
-  const [sendMessage, getMessage] = room.makeAction('message')
-  const [sendPeersMessages, getPeersMessages] = room.makeAction('peermessage')
-  const [sendMessageRequest, getMessageRequest] = room.makeAction('messagereq')
-  const [sendUsernameRequest, getUsernameRequest] = room.makeAction('activereq')
-  const [sendUsername, getUsername] = room.makeAction('username')
+  const [sendMessage, getMessage] = useRoomAction('message', room)
+  const [sendPeersMessages, getPeersMessages] = useRoomAction('peermessage', room)
+  const [sendMessageRequest, getMessageRequest] = useRoomAction('messagereq', room)
+  const [sendUsernameRequest, getUsernameRequest] = useRoomAction('activereq', room)
+  const [sendUsername, getUsername] = useRoomAction('username', room)
 
-  room.onPeerJoin((peerId: string) => {
-    setPeerCount(peerCount + 1)
-  })
+  useEffect(() => {
+    room.onPeerJoin((peerId: string) => {
+      setPeerCount(peerCount + 1)
+    })
 
-  room.onPeerLeave((peerId: string) => {
-    setPeerCount(peerCount - 1)
-  })
+    room.onPeerLeave((peerId: string) => {
+      setPeerCount(peerCount - 1)
+    })
 
-  getMessage((message, peer) => {
-    setMessages([...messages, message as MessageType])
-  })
+    getMessage((message, peer) => {
+      setMessages([...messages, message as MessageType])
+    })
 
-  getMessageRequest((data, peer) => {
-    sendPeersMessages(messages)
-  })
+    getMessageRequest((data, peer) => {
+      sendPeersMessages(messages)
+    })
 
-  getUsernameRequest((data, peer) => {
-    sendUsername({username: user.username, sender_id: user.id} as Peer)
-  })
+    getUsernameRequest((data, peer) => {
+      sendUsername({username: user.username, sender_id: user.id} as Peer)
+    })
+  }, [room]);
 
   function onClickSyncMessages() {
     setLoading(true)
@@ -140,14 +118,7 @@ const Main = () => {
     return {...newMessage, hash: hashCode(JSON.stringify(newMessage))}
   }
 
-  function keyDownHandler(e: KeyboardEvent<HTMLTextAreaElement>) {
-    if (e.key === 'Enter') {
-      e.preventDefault()
-      onClick()
-    }
-  }
-
-  function onClick() {
+  function onClickSend() {
     if (textareaRef.current?.value) {
       const message: MessageType = CreateMessage(user.username, user.id, textareaRef.current.value, userData.html_parse)
       setMessages([...messages, message])
@@ -159,16 +130,10 @@ const Main = () => {
   return (
     <div style={{textAlign: "center"}}>
       <StyledDiv>
-        <StyledDivSyncMessages>
-          <h1>Online: {peerCount}</h1>
-          <button disabled={Loading} onClick={onClickSyncMessages} style={{padding: '5px'}}>Sync messages</button>
-          <button disabled={Loading} onClick={onClickGetUsernames} style={{padding: '5px'}}>Sync peers</button>
-        </StyledDivSyncMessages>
+        <ChatBottomPanel peerCount={peerCount} Loading={Loading} onClickSyncMessages={onClickSyncMessages}
+                         onClickGetUsernames={onClickGetUsernames}/>
         <MessagesBox messages={messages}/>
-        <StyledDivSend>
-          <StyledTextarea onKeyDown={keyDownHandler} rows={2} cols={30} ref={textareaRef} style={{}}/>
-          <StyledButton onClick={onClick}><img src={send} alt="send"/></StyledButton>
-        </StyledDivSend>
+        <SendingBlock textRef={textareaRef} onClick={onClickSend}/>
       </StyledDiv>
     </div>
   );
