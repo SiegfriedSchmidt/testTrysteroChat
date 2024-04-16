@@ -2,14 +2,14 @@ import {User} from "./user.ts";
 
 export type MessageBaseType = {
   sender: string
-  sender_id: string
+  senderId: string
   time: number
   hash: number
 }
 
 export type MessageTextType = MessageBaseType & {
   text: string,
-  html_parse: boolean
+  htmlParse: boolean
 }
 
 export type MessageFileType = MessageBaseType & {

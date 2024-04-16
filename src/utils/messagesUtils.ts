@@ -1,8 +1,8 @@
 import {MessageTextType} from "../types/chat.ts";
 import hashCode from "./hash.ts";
 
-export function createMessage(sender: string, sender_id: string, text: string, html_parse: boolean): MessageTextType {
-  const newMessage = {sender, text, sender_id, html_parse, time: (new Date()).getTime()}
+export function createMessage(sender: string, senderId: string, text: string, htmlParse: boolean): MessageTextType {
+  const newMessage = {sender, text, senderId, htmlParse, time: (new Date()).getTime()}
   return {...newMessage, hash: hashCode(JSON.stringify(newMessage))}
 }
 

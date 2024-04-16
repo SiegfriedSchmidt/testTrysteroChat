@@ -26,7 +26,7 @@ const HiddenParams: FC<HiddenParamsProps> = ({visible}) => {
   const {userData, setUserData} = useUserData();
 
   function onChangeHtmlParse(val: boolean) {
-    setUserData({...userData, html_parse: val})
+    setUserData({...userData, htmlParse: val})
   }
 
   function onChangeProtocolSelection(val: string) {
@@ -36,7 +36,7 @@ const HiddenParams: FC<HiddenParamsProps> = ({visible}) => {
   return (
     <StyledDiv $isOpen={visible}>
       <h3>Panel only for firefly enjoyers :)</h3>
-      <CheckboxWithLabel checked={userData.html_parse} label='Parse html' onChange={onChangeHtmlParse}/>
+      <CheckboxWithLabel checked={userData.htmlParse} label='Parse html' onChange={onChangeHtmlParse}/>
       <SelectWithLabel label="Protocol" selection={Protocols} default_val={userData.protocol}
                        onChange={onChangeProtocolSelection}/>
     </StyledDiv>

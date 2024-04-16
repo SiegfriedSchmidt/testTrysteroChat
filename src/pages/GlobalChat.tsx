@@ -74,7 +74,7 @@ const Main = () => {
   }
 
   function onClickSend(text: string) {
-    const message: MessageTextType = createMessage(user.username, user.id, text, userData.html_parse)
+    const message: MessageTextType = createMessage(user.username, user.id, text, userData.htmlParse)
     setMessages([...messages, message])
     sendMessage(message)
   }

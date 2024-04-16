@@ -1,6 +1,6 @@
 import {UserData} from "../types/user.ts";
 
-const defaultUserData: UserData = {firefly: false, html_parse: false, protocol: 'firebase'}
+const defaultUserData: UserData = {firefly: false, htmlParse: false, protocol: 'firebase'}
 
 export function getDefaultUserData(): UserData {
   const storedUserData = localStorage.getItem("userData");
