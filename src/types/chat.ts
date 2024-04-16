@@ -1,3 +1,5 @@
+import {User} from "./user.ts";
+
 export type MessageType = {
   sender: string,
   sender_id: string,
@@ -6,3 +8,5 @@ export type MessageType = {
   hash: number,
   html_parse: boolean
 }
+
+export type Peers = { [peerId: string]: User };

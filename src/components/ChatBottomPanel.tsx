@@ -1,5 +1,6 @@
 import React, {FC} from 'react';
 import styled from "styled-components";
+import {Peers} from "../types/chat.ts";
 
 const StyledDiv = styled.div`
     display: flex;
@@ -7,18 +8,16 @@ const StyledDiv = styled.div`
 `
 
 interface ChatBottomPanelProps {
-  peerCount: number
+  peers: Peers
   Loading: boolean
   onClickSyncMessages: () => void
-  onClickGetUsernames: () => void
 }
 
-const ChatBottomPanel: FC<ChatBottomPanelProps> = ({peerCount, Loading, onClickSyncMessages, onClickGetUsernames}) => {
+const ChatBottomPanel: FC<ChatBottomPanelProps> = ({peers, Loading, onClickSyncMessages}) => {
   return (
     <StyledDiv>
-      <h1>Online: {peerCount}</h1>
+      <h1>Online: {Object.keys(peers).length}</h1>
       <button disabled={Loading} onClick={onClickSyncMessages} style={{padding: '5px'}}>Sync messages</button>
-      <button disabled={Loading} onClick={onClickGetUsernames} style={{padding: '5px'}}>Sync peers</button>
     </StyledDiv>
   );
 };

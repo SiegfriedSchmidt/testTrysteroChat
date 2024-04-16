@@ -6,17 +6,18 @@ import {joinRoom as joinRoomFirebase} from "trystero/firebase";
 import {useEffect, useRef} from 'react'
 import {Room, selfId} from "trystero";
 import {Protocol} from "../types/protocols.ts";
+import {appId} from "../utils/constants.ts";
 
 function joinRoom(roomId: string, protocol: Protocol) {
   switch (protocol) {
     case "torrent":
-      return joinRoomTorrent({appId: 'ewklqkge'}, roomId)
+      return joinRoomTorrent({appId}, roomId)
     case "nostr":
-      return joinRoomNostr({appId: 'ewklqkge'}, roomId)
+      return joinRoomNostr({appId}, roomId)
     case "mqtt":
-      return joinRoomMqtt({appId: 'ewklqkge'}, roomId)
+      return joinRoomMqtt({appId}, roomId)
     case "ipfs":
-      return joinRoomIpfs({appId: 'ewklqkge'}, roomId)
+      return joinRoomIpfs({appId}, roomId)
     case "firebase":
       return joinRoomFirebase({appId: "https://kun-chat-4387b-default-rtdb.europe-west1.firebasedatabase.app/"}, roomId)
   }
@@ -31,7 +32,17 @@ export const useRoom = (roomId: string, protocol: Protocol): {
   useEffect(() => {
     roomRef.current = joinRoom(roomId, protocol)
     console.log('connected')
-    return () => roomRef.current.leave()
+
+    function windowClosingHandler() {
+      roomRef.current.leave()
+    }
+
+    window.addEventListener("beforeunload", windowClosingHandler)
+
+    return () => {
+      roomRef.current.leave()
+      window.removeEventListener("beforeunload", windowClosingHandler)
+    }
   }, [roomId, protocol])
 
   return {room: roomRef.current, selfId: selfId}
