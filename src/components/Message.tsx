@@ -1,12 +1,14 @@
-import {FC} from 'react';
-import {MessageTextType} from "../types/chat.ts";
+import React, {FC, ReactNode} from 'react';
+import {MessageAllType} from "../types/chat.ts";
 import styled from "styled-components";
 import useUser from "../hooks/useUser.tsx";
 import parse from 'html-react-parser';
 import UsernameSpan from "./UsernameSpan.tsx";
+import VideoMessage from "./VideoMessage.tsx";
+import ImageMessage from "./ImageMessage.tsx";
 
 interface MessageProps {
-  message: MessageTextType
+  message: MessageAllType;
 }
 
 const StyledMessage = styled.div`
@@ -53,6 +55,26 @@ const StyledDivRight = styled.div`
     }
 `
 
+function getMessage(message: MessageAllType): ReactNode {
+  if (message.type === 'video') {
+    if ("content" in message) {
+      return <VideoMessage blob={message.content}/>
+    }
+  }
+  if (message.type === 'image') {
+    if ("content" in message) {
+      return <ImageMessage blob={message.content}/>
+    }
+  }
+  if (message.type === 'text') {
+    if ("htmlParse" in message && "text" in message) {
+      return message.htmlParse ? parse(message.text as string) : message.text as string
+    }
+  }
+
+  return 'Unknown type'
+}
+
 // const DateOptions: Intl.DateTimeFormatOptions = {hour: '2-digit', minute: '2-digit', hour12: false};
 const Message: FC<MessageProps> = ({message}) => {
   const {user} = useUser()
@@ -64,7 +86,7 @@ const Message: FC<MessageProps> = ({message}) => {
     <DivStyle>
       <StyledMessage>
         {me ? <></> : <UsernameSpan sender={message.sender} senderId={message.senderId}/>}
-        {message.htmlParse ? parse(message.text) : message.text}
+        {getMessage(message)}
         <StyledTimeSpan>{date}</StyledTimeSpan>
       </StyledMessage>
     </DivStyle>

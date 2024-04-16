@@ -1,7 +1,7 @@
 import React, {FC, useEffect, useRef} from 'react';
 import Message from "./Message.tsx";
 import styled from "styled-components";
-import {MessageTextType} from "../types/chat.ts";
+import {MessageAllType} from "../types/chat.ts";
 
 const StyledDivMessages = styled.div`
     padding: 8px;
@@ -16,7 +16,7 @@ const StyledDivMessages = styled.div`
 `
 
 interface MessageBoxProps {
-  messages: MessageTextType[];
+  messages: MessageAllType[];
 }
 
 const MessagesBox: FC<MessageBoxProps> = ({messages}) => {

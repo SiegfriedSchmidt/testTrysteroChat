@@ -1,6 +1,13 @@
 import {useRoom} from "../hooks/useRoom.tsx";
 import {useEffect, useState} from "react";
-import {MessageTextType, Peers} from "../types/chat.ts";
+import {
+  MessageAllType,
+  MessageBaseType,
+  MessageContentType,
+  MessageFileType,
+  MessageTextType,
+  Peers
+} from "../types/chat.ts";
 import styled from "styled-components";
 import MessagesBox from "../components/MessagesBox.tsx";
 import useUser from "../hooks/useUser.tsx";
@@ -10,7 +17,14 @@ import useRoomAction from "../hooks/useRoomAction.tsx";
 import ChatBottomPanel from "../components/ChatBottomPanel.tsx";
 import {globalRoomId} from "../utils/constants.ts";
 import {User} from "../types/user.ts";
-import {createMessage, getMessagesHashes, getMissingMessages, sortMessages} from "../utils/messagesUtils.ts";
+import {
+  createFileMessage,
+  createTextMessage,
+  getMessagesHashes,
+  getMissingMessages,
+  getTextMessages,
+  sortMessages
+} from "../utils/messagesUtils.ts";
 import syncMessagesWithPeers from "../utils/syncMessagesWithPeers.ts";
 
 const StyledDiv = styled.div`
@@ -28,11 +42,13 @@ const Main = () => {
   const {user} = useUser()
   const {userData} = useUserData()
   const {room} = useRoom(globalRoomId, userData.protocol)
-  const [messages, setMessages] = useState<MessageTextType[]>([])
+  const [messages, setMessages] = useState<MessageAllType[]>([])
   const [peers, setPeers] = useState<Peers>({})
   const [Loading, setLoading] = useState<boolean>(false)
+  const [FileLoading, setFileLoading] = useState<number>(0)
 
   const [sendMessage, getMessage] = useRoomAction('message', room)
+  const [sendFile, getFile] = useRoomAction('file', room)
   const [sendPeersMessages, getPeersMessages] = useRoomAction('peermessage', room)
   const [sendMessagesRequest, getMessagesRequest] = useRoomAction('reqmessage', room)
   const [sendUsername, getUsername] = useRoomAction('username', room)
@@ -61,8 +77,12 @@ const Main = () => {
     setMessages([...messages, message as MessageTextType])
   })
 
+  getFile((content, peerId, metadata) => {
+    setMessages([...messages, {content: new Blob([content as Uint8Array]), ...metadata as MessageBaseType} as MessageFileType])
+  })
+
   getMessagesRequest((hashes, peerId) => {
-    sendPeersMessages(getMissingMessages(hashes as number[], messages))
+    sendPeersMessages(getMissingMessages(hashes as number[], getTextMessages(messages)))
   })
 
   async function onClickSyncMessages() {
@@ -74,17 +94,29 @@ const Main = () => {
   }
 
   function onClickSend(text: string) {
-    const message: MessageTextType = createMessage(user.username, user.id, text, userData.htmlParse)
+    const message: MessageTextType = createTextMessage(user.username, user.id, text, userData.htmlParse)
     setMessages([...messages, message])
     sendMessage(message)
+  }
+
+  async function onClickFile(file: Blob, filetype: MessageContentType) {
+    setLoading(true)
+    const message: MessageFileType = createFileMessage(user.username, user.id, file, filetype)
+    setMessages([...messages, message])
+    setFileLoading(0)
+    await sendFile(message.content, null, message.metadata, (percent, peerId) => {
+      setFileLoading(percent * 100)
+    })
+    setLoading(false)
   }
 
   return (
     <div style={{textAlign: "center"}}>
       <StyledDiv>
-        <ChatBottomPanel peers={peers} Loading={Loading} onClickSyncMessages={onClickSyncMessages}/>
+        <ChatBottomPanel fileLoading={FileLoading} peers={peers} Loading={Loading}
+                         onClickSyncMessages={onClickSyncMessages}/>
         <MessagesBox messages={messages}/>
-        <SendingBlock onClickSend={onClickSend}/>
+        <SendingBlock onClickSend={onClickSend} onClickFile={onClickFile}/>
       </StyledDiv>
     </div>
   );
