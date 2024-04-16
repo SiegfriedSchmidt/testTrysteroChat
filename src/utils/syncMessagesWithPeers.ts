@@ -1,4 +1,4 @@
-import {MessageType, Peers} from "../types/chat.ts";
+import {MessageTextType, Peers} from "../types/chat.ts";
 import {getMessagesHashes} from "./messagesUtils.ts";
 import {DataPayload} from "trystero";
 
@@ -8,14 +8,14 @@ export default function syncMessagesWithPeers(
   sendMessagesRequest: (hashes: number[], peerId: string) => void,
   getPeersMessages: (receiver: (peersMessages: DataPayload) => void) => void,
   timeout = 5000
-): Promise<MessageType[]> {
+): Promise<MessageTextType[]> {
   return new Promise((resolve) => {
     const peersIds = Object.keys(peers)
-    const messages: MessageType[] = [];
+    const messages: MessageTextType[] = [];
     let curIdx = 0
     const timeoutId = setTimeout(() => safeResolve(messages), timeout)
 
-    function safeResolve(messages: MessageType[]) {
+    function safeResolve(messages: MessageTextType[]) {
       clearTimeout(timeoutId)
       getPeersMessages(() => {
       })
@@ -23,8 +23,8 @@ export default function syncMessagesWithPeers(
     }
 
     function receiver(peersMessages: DataPayload) {
-      messages.push(...peersMessages as MessageType[])
-      hashes.push(...getMessagesHashes(peersMessages as MessageType[]))
+      messages.push(...peersMessages as MessageTextType[])
+      hashes.push(...getMessagesHashes(peersMessages as MessageTextType[]))
       if (curIdx >= peersIds.length) {
         safeResolve(messages)
         return

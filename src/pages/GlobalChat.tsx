@@ -1,6 +1,6 @@
 import {useRoom} from "../hooks/useRoom.tsx";
 import {useEffect, useRef, useState,} from "react";
-import {MessageType, Peers} from "../types/chat.ts";
+import {MessageTextType, Peers} from "../types/chat.ts";
 import styled from "styled-components";
 import MessagesBox from "../components/MessagesBox.tsx";
 import useUser from "../hooks/useUser.tsx";
@@ -29,7 +29,7 @@ const Main = () => {
   const {userData} = useUserData()
   const {room} = useRoom(globalRoomId, userData.protocol)
   const textareaRef = useRef<HTMLTextAreaElement>(null)
-  const [messages, setMessages] = useState<MessageType[]>([])
+  const [messages, setMessages] = useState<MessageTextType[]>([])
   const [peers, setPeers] = useState<Peers>({})
   const [Loading, setLoading] = useState<boolean>(false)
 
@@ -59,7 +59,7 @@ const Main = () => {
   })
 
   getMessage((message, peerId) => {
-    setMessages([...messages, message as MessageType])
+    setMessages([...messages, message as MessageTextType])
   })
 
   getMessagesRequest((hashes, peerId) => {
@@ -76,7 +76,7 @@ const Main = () => {
 
   function onClickSend() {
     if (textareaRef.current?.value) {
-      const message: MessageType = createMessage(user.username, user.id, textareaRef.current.value, userData.html_parse)
+      const message: MessageTextType = createMessage(user.username, user.id, textareaRef.current.value, userData.html_parse)
       setMessages([...messages, message])
       sendMessage(message)
       textareaRef.current.value = ''
