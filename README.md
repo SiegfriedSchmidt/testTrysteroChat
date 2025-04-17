@@ -1,3 +1,7 @@
+# ARCHIVED!
+
+The new and improved version of the website is located at https://github.com/SiegfriedSchmidt/MeshMurmur
+
 # Best serverless platform for chatting
 
 ### Site
