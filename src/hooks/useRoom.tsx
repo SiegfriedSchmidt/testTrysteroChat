@@ -2,7 +2,6 @@ import {joinRoom as joinRoomTorrent} from "trystero/torrent";
 import {joinRoom as joinRoomNostr} from "trystero/nostr";
 import {joinRoom as joinRoomMqtt} from "trystero/mqtt";
 import {joinRoom as joinRoomIpfs} from "trystero/ipfs";
-import {joinRoom as joinRoomFirebase} from "trystero/firebase";
 import {useEffect, useRef} from 'react'
 import {Room, selfId} from "trystero";
 import {Protocol} from "../types/protocols.ts";
@@ -18,8 +17,6 @@ function joinRoom(roomId: string, protocol: Protocol) {
       return joinRoomMqtt({appId}, roomId)
     case "ipfs":
       return joinRoomIpfs({appId}, roomId)
-    case "firebase":
-      return joinRoomFirebase({appId: "https://kun-chat-4387b-default-rtdb.europe-west1.firebasedatabase.app/"}, roomId)
   }
 }
 
